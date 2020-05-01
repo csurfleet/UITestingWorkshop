@@ -20,11 +20,19 @@ namespace SeleniumBasics
             // when it runs out of RAM and crashes ;)
             try
             {
+                // You can play with the browser window, not just the contents of webpages!
                 webDriver.Manage().Window.Maximize();
+
+                // This will take us to our start page
                 webDriver.Url = "http://google.com";
 
+                // Ideally, you want an easy way of identifying elements on a page. In a perfect world your UI developer will put IDs on everything
+                // and you can use By.Id() to find things. Choose the most reliable query you can which generally happens in this order:
+                // ID > Name > XPath query
                 var searchBox = webDriver.FindElement(By.Name("q"));
 
+                // We can assert on the element once we have found it. Using a fluent assertions library such as fluentassertions will
+                // make things easier when we come to upgrade this to a BDD automation.
                 searchBox.Displayed.Should().BeTrue();
 
                 searchBox.SendKeys("is UI testing worth it?");
@@ -32,6 +40,8 @@ namespace SeleniumBasics
                 var submitButton = webDriver.FindElement(By.Name("btnK"));
                 submitButton.Click();
 
+                // Here we see an example of using an XPath query to find an element. I would never use this query in an actual application
+                // as it is likely to be brittle (google's page order could change, the page title could change or a multitude of other things)
                 var result = webDriver.FindElement(By.XPath("//h3[text()='Automated Testing on UI: Is it Really Worth the Effort? - DZone ...']"));
                 result.Displayed.Should().BeTrue();
             }
